@@ -37,7 +37,8 @@ class CreateSubscriptionValidatorTest {
     ValidationResult validationResult = validator.validate(createSubscriptionDto);
 
     assertThat(validationResult.getErrors()).hasSize(1);
-    assertThat(validationResult.getErrors().get(0)).isEqualTo(Error.of(100, "userId is invalid"));
+    assertThat(validationResult.getErrors().get(0))
+        .isEqualTo(Error.of(100, "userId is invalid"));
   }
 
   @Test
@@ -52,7 +53,8 @@ class CreateSubscriptionValidatorTest {
     ValidationResult validationResult = validator.validate(createSubscriptionDto);
 
     assertThat(validationResult.getErrors()).hasSize(1);
-    assertThat(validationResult.getErrors().get(0)).isEqualTo(Error.of(101, "name is invalid"));
+    assertThat(validationResult.getErrors().get(0))
+        .isEqualTo(Error.of(101, "name is invalid"));
   }
 
   @Test
@@ -67,7 +69,8 @@ class CreateSubscriptionValidatorTest {
     ValidationResult validationResult = validator.validate(createSubscriptionDto);
 
     assertThat(validationResult.getErrors()).hasSize(1);
-    assertThat(validationResult.getErrors().get(0)).isEqualTo(Error.of(102, "provider is invalid"));
+    assertThat(validationResult.getErrors().get(0))
+        .isEqualTo(Error.of(102, "provider is invalid"));
   }
 
   @Test
@@ -82,7 +85,8 @@ class CreateSubscriptionValidatorTest {
     ValidationResult validationResult = validator.validate(createSubscriptionDto);
 
     assertThat(validationResult.getErrors()).hasSize(1);
-    assertThat(validationResult.getErrors().get(0)).isEqualTo(Error.of(103, "expirationDate is invalid"));
+    assertThat(validationResult.getErrors().get(0))
+        .isEqualTo(Error.of(103, "expirationDate is invalid"));
   }
 
   @Test
@@ -97,7 +101,27 @@ class CreateSubscriptionValidatorTest {
     ValidationResult validationResult = validator.validate(createSubscriptionDto);
 
     assertThat(validationResult.getErrors()).hasSize(1);
-    assertThat(validationResult.getErrors().get(0)).isEqualTo(Error.of(103, "expirationDate is invalid"));
+    assertThat(validationResult.getErrors().get(0))
+        .isEqualTo(Error.of(103, "expirationDate is invalid"));
+  }
+
+  @Test
+  void validateInvalidUserIdAndProviderAndExpirationDate() {
+    CreateSubscriptionDto createSubscriptionDto = CreateSubscriptionDto.builder()
+        .userId(null)
+        .name("test")
+        .provider(null)
+        .expirationDate(null)
+        .build();
+
+    ValidationResult validationResult = validator.validate(createSubscriptionDto);
+
+    assertThat(validationResult.getErrors()).hasSize(3);
+    assertThat(validationResult.getErrors()).contains(
+        Error.of(100, "userId is invalid"),
+        Error.of(102, "provider is invalid"),
+        Error.of(103, "expirationDate is invalid")
+    );
   }
 
 }

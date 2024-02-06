@@ -20,11 +20,9 @@ import org.junit.jupiter.api.Test;
 
 class SubscriptionServiceIT extends IntegrationTestBase {
 
-
-  private SubscriptionDao subscriptionDao;
   private final Clock clock = Clock.fixed(Instant.now(), ZoneId.systemDefault());
+  private SubscriptionDao subscriptionDao;
   private SubscriptionService service;
-
 
   @BeforeEach
   void init() {
@@ -79,10 +77,8 @@ class SubscriptionServiceIT extends IntegrationTestBase {
     Optional<Subscription> actualResult = subscriptionDao.findById(subscription.getId());
     assertThat(actualResult).isPresent();
     assertThat(actualResult.get().getStatus()).isEqualByComparingTo(Status.EXPIRED);
-    assertThat(actualResult.get().getExpirationDate().truncatedTo(ChronoUnit.SECONDS))
-        .isEqualTo(clock.instant().truncatedTo(ChronoUnit.SECONDS));
+    assertThat(actualResult.get().getExpirationDate()).isEqualTo(clock.instant());
   }
-
 
   private Subscription getActiveSubscriptionForUserId(Integer userId, String name) {
     return Subscription.builder()

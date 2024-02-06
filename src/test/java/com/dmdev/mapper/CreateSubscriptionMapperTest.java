@@ -1,11 +1,12 @@
 package com.dmdev.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.dmdev.dto.CreateSubscriptionDto;
 import com.dmdev.entity.Provider;
 import com.dmdev.entity.Status;
 import com.dmdev.entity.Subscription;
 import java.time.Instant;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class CreateSubscriptionMapperTest {
@@ -31,6 +32,6 @@ class CreateSubscriptionMapperTest {
         .expirationDate(expirationDate)
         .status(Status.ACTIVE)
         .build();
-    Assertions.assertThat(actualResult).isEqualTo(expectedResult);
+    assertThat(actualResult).isEqualTo(expectedResult);
   }
 }

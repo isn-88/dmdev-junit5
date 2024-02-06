@@ -15,8 +15,7 @@
         <commons-lang3.version>3.14.0</commons-lang3.version>
         <postgresql.version>42.7.1</postgresql.version>
         <lombok.version>1.18.30</lombok.version>
-        <junit-jupiter-engine.version>5.10.1</junit-jupiter-engine.version>
-        <junit-jupiter-params.version>5.10.1</junit-jupiter-params.version>
+        <junit.version>5.10.1</junit.version>
         <assertj-core.version>3.25.2</assertj-core.version>
         <mockito-junit-jupiter.version>5.10.0</mockito-junit-jupiter.version>
         <h2.version>2.2.224</h2.version>
@@ -43,13 +42,13 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit-jupiter-engine.version}</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
-            <version>5.10.1</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

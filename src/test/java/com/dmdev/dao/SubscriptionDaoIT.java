@@ -17,8 +17,6 @@ class SubscriptionDaoIT extends IntegrationTestBase {
 
   private final SubscriptionDao subscriptionDao = SubscriptionDao.getInstance();
 
-
-
   @Test
   void upsertInsert() {
     Subscription subscription = getSubscription(1, "name");
@@ -57,18 +55,21 @@ class SubscriptionDaoIT extends IntegrationTestBase {
   void findByIdExists() {
     Subscription subscription = subscriptionDao.insert(getSubscription(1, "name"));
 
-    Optional<Subscription> ActualResult = subscriptionDao.findById(subscription.getId());
+    Optional<Subscription> actualResult = subscriptionDao.findById(subscription.getId());
 
-    assertThat(ActualResult).isPresent();
+    assertThat(actualResult).isPresent();
+    assertThat(actualResult.get().getId()).isEqualTo(subscription.getId());
+    assertThat(actualResult.get().getUserId()).isEqualTo(subscription.getUserId());
+    assertThat(actualResult.get().getName()).isEqualTo(subscription.getName());
   }
 
   @Test
   void findByIdNotExists() {
     Subscription subscription = subscriptionDao.insert(getSubscription(1, "name"));
 
-    Optional<Subscription> ActualResult = subscriptionDao.findById(Integer.MAX_VALUE);
+    Optional<Subscription> actualResult = subscriptionDao.findById(Integer.MAX_VALUE);
 
-    assertThat(ActualResult).isEmpty();
+    assertThat(actualResult).isEmpty();
   }
 
   @Test
@@ -92,9 +93,12 @@ class SubscriptionDaoIT extends IntegrationTestBase {
     Subscription subscription = subscriptionDao.insert(getSubscription(1, "test"));
     subscription.setStatus(Status.CANCELED);
 
-    Subscription updatedSubscription = subscriptionDao.update(subscription);
+    subscriptionDao.update(subscription);
 
-    assertThat(updatedSubscription).isEqualTo(subscription);
+    Optional<Subscription> actualResult = subscriptionDao.findById(subscription.getId());
+    assertThat(actualResult).isPresent();
+    assertThat(actualResult.get().getId()).isEqualTo(subscription.getId());
+    assertThat(actualResult.get().getStatus()).isEqualByComparingTo(Status.CANCELED);
   }
 
   @Test
@@ -111,7 +115,8 @@ class SubscriptionDaoIT extends IntegrationTestBase {
 
     Subscription actualResult = subscriptionDao.insert(subscription1);
     assertThat(actualResult.getId()).isNotNull();
-    assertThrows(JdbcSQLIntegrityConstraintViolationException.class, () -> subscriptionDao.insert(subscription2));
+    assertThrows(JdbcSQLIntegrityConstraintViolationException.class,
+                 () -> subscriptionDao.insert(subscription2));
   }
 
   @Test

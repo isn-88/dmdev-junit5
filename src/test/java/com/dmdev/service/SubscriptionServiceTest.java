@@ -33,13 +33,11 @@ import org.junit.jupiter.api.Test;
 
 class SubscriptionServiceTest {
 
-
+  private final Clock clock = Clock.fixed(Instant.now(), ZoneId.systemDefault());
   private SubscriptionDao subscriptionDao;
   private CreateSubscriptionMapper createSubscriptionMapper;
   private CreateSubscriptionValidator createSubscriptionValidator;
-  private final Clock clock = Clock.fixed(Instant.now(), ZoneId.systemDefault());
   private SubscriptionService service;
-
 
   @BeforeEach
   void init() {
@@ -99,12 +97,15 @@ class SubscriptionServiceTest {
 
   @Test
   void upsertThrowValidationException() {
+    Error error = Error.of(100, "error");
     ValidationResult validationResult = new ValidationResult();
-    validationResult.add(Error.of(100, "error"));
+    validationResult.add(error);
 
     doReturn(validationResult).when(createSubscriptionValidator).validate(any());
 
-    assertThrows(ValidationException.class,() -> service.upsert(any()));
+    var exception = assertThrows(ValidationException.class, () -> service.upsert(any()));
+    assertThat(exception.getErrors()).hasSize(1);
+    assertThat(exception.getErrors()).contains(error);
   }
 
   @Test
@@ -121,9 +122,11 @@ class SubscriptionServiceTest {
   @Test
   void cancelFailedIncorrectSubscriptionStatus() {
     Subscription subscription = getExpiredSubscriptionForUserId(10, "test-expired");
+    String errorMessage = String.format("Only active subscription %d can be canceled", subscription.getId());
     doReturn(Optional.of(subscription)).when(subscriptionDao).findById(subscription.getId());
 
-    assertThrows(SubscriptionException.class, () -> service.cancel(subscription.getId()));
+    var exception = assertThrows(SubscriptionException.class, () -> service.cancel(subscription.getId()));
+    assertThat(exception.getMessage()).isEqualTo(errorMessage);
 
     verify(subscriptionDao).findById(subscription.getId());
     verify(subscriptionDao, never()).update(subscription);

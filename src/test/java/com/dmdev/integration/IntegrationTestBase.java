@@ -16,7 +16,7 @@ public abstract class IntegrationTestBase {
                 user_id INT NOT NULL ,
                 name VARCHAR(64) NOT NULL ,
                 provider VARCHAR(16) NOT NULL ,
-                expiration_date DATETIME NOT NULL ,
+                expiration_date TIMESTAMP(9) NOT NULL ,
                 status VARCHAR(16) NOT NULL ,
                 UNIQUE (user_id, name)
             );
